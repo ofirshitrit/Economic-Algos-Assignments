@@ -1,21 +1,41 @@
 import networkx as nx
+import sys
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, stream=sys.stdout, format='%(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+logger = logging.getLogger(__name__)
+
+
+# Comment this line to see prints of the logger
+# logger.setLevel(logging.WARNING)
 
 
 def vcg_cheapest_path(graph, source, target):
     shortest_path = nx.shortest_path(graph, source=source, target=target, weight='weight')
+    logger.info(f"shorted path: {shortest_path} ")
 
     total_cost = sum(graph[u][v]['weight'] for u, v in zip(shortest_path[:-1], shortest_path[1:]))
+    logger.info(f"total_cost: {total_cost} ")
+
 
     edge_payments = {}
 
     for u, v in zip(shortest_path[:-1], shortest_path[1:]):
         weight = graph[u][v]['weight']
         graph.remove_edge(u, v)
+        logger.info(f"u: {u}, v: {v}")
 
         new_shortest_path = nx.shortest_path(graph, source=source, target=target, weight='weight')
-        new_total_cost = sum(graph[u][v]['weight'] for u, v in zip(new_shortest_path[:-1], new_shortest_path[1:]))
+        logger.info(f"new_shortest_path: {new_shortest_path} ")
 
-        payment = new_total_cost - total_cost
+        curr_cost_without_uv = -sum(graph[u][v]['weight'] for u, v in zip(new_shortest_path[:-1], new_shortest_path[1:]))
+        logger.info(f"curr_cost_without_uv: {curr_cost_without_uv} ")
+
+        cost_of_cheapest_path_without_uv = total_cost - weight
+        payment = curr_cost_without_uv + cost_of_cheapest_path_without_uv
+        logger.info(f"payment: {payment} ")
+
         edge_payments[(u, v)] = payment
         graph.add_edge(u, v, weight=weight)
 
@@ -36,4 +56,3 @@ if __name__ == "__main__":
     for edge, payment in edge_payments.items():
         print()
         print(f"Edge {edge[0]} -> {edge[1]}: {payment}")
-

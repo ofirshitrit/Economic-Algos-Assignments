@@ -34,5 +34,6 @@ if __name__ == "__main__":
     edge_payments = vcg_cheapest_path(G, 'A', 'D')
 
     for edge, payment in edge_payments.items():
+        print()
         print(f"Edge {edge[0]} -> {edge[1]}: {payment}")
 

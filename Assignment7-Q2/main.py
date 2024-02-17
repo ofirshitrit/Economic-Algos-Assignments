@@ -34,6 +34,26 @@ def vcg_cheapest_path(graph, source, target):
     >>> vcg_cheapest_path(G, 'A', 'D')
     {('A', 'C'): -2, ('C', 'D'): -5}
 
+    >>> G = nx.Graph()
+    >>> G.add_edge('A', 'B', weight=5)
+    >>> G.add_edge('A', 'C', weight=5)
+    >>> G.add_edge('A', 'D', weight=12)
+    >>> G.add_edge('B', 'C', weight=5)
+    >>> G.add_edge('B', 'D', weight=5)
+    >>> G.add_edge('C', 'D', weight=5)
+    >>> vcg_cheapest_path(G, 'A', 'D')
+    {('A', 'B'): -5, ('B', 'D'): -5}
+
+    >>> G = nx.Graph()
+    >>> G.add_edge('A', 'B', weight=5)
+    >>> G.add_edge('A', 'C', weight=5)
+    >>> G.add_edge('A', 'D', weight=3)
+    >>> G.add_edge('B', 'C', weight=5)
+    >>> G.add_edge('B', 'D', weight=5)
+    >>> G.add_edge('C', 'D', weight=5)
+    >>> vcg_cheapest_path(G, 'A', 'D')
+    {('A', 'D'): -10}
+
     """
     shortest_path = nx.shortest_path(graph, source=source, target=target, weight='weight')
     logger.info(f"shorted path: {shortest_path} ")
@@ -70,15 +90,5 @@ def vcg_cheapest_path(graph, source, target):
 
 if __name__ == "__main__":
     import doctest
-
     doctest.testmod()
 
-    G = nx.Graph()
-    G.add_edge('A', 'B', weight=10)
-    G.add_edge('A', 'C', weight=1)
-    G.add_edge('A', 'D', weight=7)
-    G.add_edge('B', 'C', weight=3)
-    G.add_edge('B', 'D', weight=2)
-    G.add_edge('C', 'D', weight=5)
-
-    print(vcg_cheapest_path(G, 'A', 'D'))

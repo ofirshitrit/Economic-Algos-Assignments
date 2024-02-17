@@ -25,14 +25,14 @@ def vcg_cheapest_path(graph, source, target):
     {('A', 'B'): -4, ('B', 'C'): -2, ('C', 'D'): -3}
 
     >>> G = nx.Graph()
-    >>> G.add_edge('A', 'B', weight=3)
-    >>> G.add_edge('A', 'C', weight=5)
-    >>> G.add_edge('A', 'D', weight=10)
-    >>> G.add_edge('B', 'C', weight=1)
-    >>> G.add_edge('B', 'D', weight=4)
-    >>> G.add_edge('C', 'D', weight=1)
+    >>> G.add_edge('A', 'B', weight=10)
+    >>> G.add_edge('A', 'C', weight=1)
+    >>> G.add_edge('A', 'D', weight=7)
+    >>> G.add_edge('B', 'C', weight=3)
+    >>> G.add_edge('B', 'D', weight=2)
+    >>> G.add_edge('C', 'D', weight=5)
     >>> vcg_cheapest_path(G, 'A', 'D')
-    {('A', 'B'): -4, ('B', 'C'): -2, ('C', 'D'): -3}
+    {('A', 'C'): -2, ('C', 'D'): -5}
 
     """
     shortest_path = nx.shortest_path(graph, source=source, target=target, weight='weight')
@@ -40,7 +40,10 @@ def vcg_cheapest_path(graph, source, target):
 
     edges_cost = {}
 
-    for u, v in zip(shortest_path[:-1], shortest_path[1:]):
+    for i in range(len(shortest_path) - 1):
+        u = shortest_path[i]
+        v = shortest_path[i + 1]
+
         weight = graph[u][v]['weight']
 
         total_cost = sum(graph[u][v]['weight'] for u, v in zip(shortest_path[:-1], shortest_path[1:]))
@@ -70,12 +73,12 @@ if __name__ == "__main__":
 
     doctest.testmod()
 
-    # G = nx.Graph()
-    # G.add_edge('A', 'B', weight=3)
-    # G.add_edge('A', 'C', weight=5)
-    # G.add_edge('A', 'D', weight=10)
-    # G.add_edge('B', 'C', weight=1)
-    # G.add_edge('B', 'D', weight=4)
-    # G.add_edge('C', 'D', weight=1)
-    #
-    # print(vcg_cheapest_path(G, 'A', 'D'))
+    G = nx.Graph()
+    G.add_edge('A', 'B', weight=10)
+    G.add_edge('A', 'C', weight=1)
+    G.add_edge('A', 'D', weight=7)
+    G.add_edge('B', 'C', weight=3)
+    G.add_edge('B', 'D', weight=2)
+    G.add_edge('C', 'D', weight=5)
+
+    print(vcg_cheapest_path(G, 'A', 'D'))
